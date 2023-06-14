@@ -12,6 +12,7 @@ const users = require('./routes/users');
 const movies = require('./routes/movies');
 const authorize = require('./routes/authorize');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./utils/limiter');
 
 const app = express();
 mongoose.connect('mongodb://127.0.0.1:27017/kotDiplomDB');
@@ -20,6 +21,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+app.use(limiter);
 
 app.use(cors(corsProcessing));
 
