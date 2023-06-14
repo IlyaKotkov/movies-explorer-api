@@ -17,3 +17,5 @@ router.post('/signup', celebrate({
     avatar: Joi.string().pattern(/(?:https?):\/\/(\w+:?\w*)?(\S+)(:\d+)?(\/|\/([\w#!:.?+=&%!\-/]))?/),
   }),
 }), createUser);
+
+module.exports = router;

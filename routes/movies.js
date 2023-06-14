@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const auth = require('../middlewares/auth');
 const {
-  getMovies, createMovies, deleteMovieById,
+  getMovies, createMovie, deleteMovieById,
 } = require('../controllers/movies');
 const { regexLink } = require('../utils/constants');
 
@@ -21,7 +21,7 @@ router.post('/movies', auth, celebrate({
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
-}), createMovies);
+}), createMovie);
 router.delete('/movies/:movieId', auth, celebrate({
   params: Joi.object().keys({
     movieId: Joi.string().hex().length(24).required(),

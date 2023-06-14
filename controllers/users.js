@@ -28,14 +28,8 @@ const updateUser = (req, res, data, next) => {
     });
 };
 
-module.exports.getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch((err) => next(err));
-};
-
 module.exports.getUsersById = (req, res, next) => {
-  const userId = req.params.userId ? req.params.userId : req.user._id;
+  const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
       if (!user) {
@@ -55,11 +49,11 @@ module.exports.getUsersById = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    email, password,
+    name, email, password,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      email, password: hash, // записываем хеш в базу
+      name, email, password: hash, // записываем хеш в базу
     }))
     .then((user) => res.status(201).send(user))
     .catch((err) => {
@@ -87,11 +81,6 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.updateUserInfo = (req, res) => {
-  const { name, about } = req.body;
-  updateUser(req, res, { name, about });
-};
-
-module.exports.updateUserAvatar = (req, res) => {
-  const { avatar } = req.body;
-  updateUser(req, res, { avatar });
+  const { name, email } = req.body;
+  updateUser(req, res, { name, email });
 };
