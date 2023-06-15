@@ -5,17 +5,16 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const helmet = require('helmet');
 const corsProcessing = require('./middlewares/corsProcessing');
 const routerError = require('./routes/router');
 const centralError = require('./middlewares/centralError');
-const users = require('./routes/users');
-const movies = require('./routes/movies');
-const authorize = require('./routes/authorize');
+const router = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const limiter = require('./utils/limiter');
 
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/kotDiplomDB');
+mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -24,15 +23,15 @@ app.use(requestLogger);
 
 app.use(limiter);
 
+app.use(helmet());
+
 app.use(cors(corsProcessing));
 
-app.use(authorize);
+app.use(router);
 
-app.use(users);
-app.use(movies);
+app.use(routerError);
 
 app.use(errorLogger);
-app.use(routerError);
 
 app.use(errors());
 

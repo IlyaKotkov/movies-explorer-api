@@ -7,13 +7,16 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const BadRequesError = require('../errors/BadRequesError');
 const ConflictError = require('../errors/ConflictError');
+const {
+  USER_NOT_FOUND, USER_INVALID_DATA, USER_CONFLICT_EMAIL, USER_INVALID_ID,
+} = require('../utils/constants');
 
 const updateUser = (req, res, data, next) => {
   User.findByIdAndUpdate(req.user._id, data, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         throw new NotFoundError(
-          'Пользователь по указанному id не найден.',
+          USER_NOT_FOUND,
         );
       }
 
@@ -21,7 +24,9 @@ const updateUser = (req, res, data, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequesError('Переданы некорректные данные при обновлении профиля.'));
+        next(new BadRequesError(USER_INVALID_DATA));
+      } else if (err.code === 11000) {
+        next(new ConflictError(USER_CONFLICT_EMAIL));
       } else {
         next(err);
       }
@@ -33,14 +38,14 @@ module.exports.getUsersById = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('пользователь не найден');
+        throw new NotFoundError(USER_NOT_FOUND);
       }
 
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequesError('передан некорректный id'));
+        next(new BadRequesError(USER_INVALID_ID));
       } else {
         next(err);
       }
@@ -58,9 +63,9 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Такой Email уже существует.'));
+        next(new ConflictError(USER_CONFLICT_EMAIL));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequesError('Переданы некорректные данные при создании пользователя.'));
+        next(new BadRequesError(USER_INVALID_DATA));
       } else {
         next(err);
       }

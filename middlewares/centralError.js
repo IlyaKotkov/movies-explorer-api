@@ -1,3 +1,5 @@
+const { SERVER_DEFAULT_MESSAGE } = require('../utils/constants');
+
 const centralError = ((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { status = 500, message } = err;
@@ -5,7 +7,7 @@ const centralError = ((err, req, res, next) => {
   res.status(status).send({
     // проверяем статус и выставляем сообщение в зависимости от него
     message: status === 500
-      ? 'На сервере произошла ошибка'
+      ? SERVER_DEFAULT_MESSAGE
       : message,
   });
   next();

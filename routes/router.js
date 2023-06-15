@@ -1,8 +1,9 @@
-const router = require('express').Router();
+const errorRouter = require('express').Router();
 const NotFoundError = require('../errors/NotFoundError');
+const { PAGE_NOT_FOUND } = require('../utils/constants');
 
-router.use('/*', (req, res, next) => {
-  next(new NotFoundError('Запрашиваемая страница не найдена'));
+errorRouter.use('*', (req, res, next) => {
+  next(new NotFoundError(PAGE_NOT_FOUND));
 });
 
-module.exports = router;
+module.exports = errorRouter;
