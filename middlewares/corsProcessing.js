@@ -2,6 +2,8 @@ const allowedCors = {
   origin: [
     'http://localhost:3000',
     'https://localhost:3000',
+    'https://kotkovdiplom.nomoredomains.rocks',
+    'http://kotkovdiplom.nomoredomains.rocks'
   ],
   credentials: true,
 };
