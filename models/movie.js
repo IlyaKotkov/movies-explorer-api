@@ -40,7 +40,7 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (thumbnailImage) => regexLink.test(thumbnailImage),
+      validator: (image) => regexLink.test(image),
     },
   },
   owner: {
