@@ -85,7 +85,7 @@ module.exports.login = (req, res, next) => {
     });
 };
 
-module.exports.updateUserInfo = (req, res) => {
+module.exports.updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
-  updateUser(req, res, { name, email });
+  updateUser(req, res, { name, email }, next);
 };
